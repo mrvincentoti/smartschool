@@ -2,6 +2,16 @@
 
 use Illuminate\Support\Str;
 
+define('DB_NAME', $_SERVER['RDS_DB_NAME']);
+define('DB_USER', $_SERVER['RDS_USERNAME']);
+define('DB_PASSWORD', $_SERVER['RDS_PASSWORD']);
+define('DB_HOST', $_SERVER['RDS_HOSTNAME']);
+
+// define('DB_NAME', 'unifiedtransform');
+// define('DB_USER', 'root');
+// define('DB_PASSWORD', 'password');
+// define('DB_HOST', 'smartschool.ch5czs8s7eoj.us-east-1.rds.amazonaws.com');
+
 return [
 
     /*
@@ -46,11 +56,11 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', DB_HOST),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'database' => env('DB_DATABASE', DB_NAME),
+            'username' => env('DB_USERNAME', DB_USER),
+            'password' => env('DB_PASSWORD', DB_PASSWORD),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
