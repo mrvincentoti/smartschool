@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container" style="border: 1px solid #ccc; background: #fff;">
     <div class="row justify-content-start">
         @include('layouts.left-menu')
         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-10 col-xl-10 col-xxl-10">
@@ -142,10 +142,10 @@
                                     <label for="inputAssignToClass" class="form-label">Assign to class:<sup><i class="bi bi-asterisk text-primary"></i></sup></label>
                                     <select onchange="getSections(this);" class="form-select" id="inputAssignToClass" name="class_id" required>
                                         @isset($school_classes)
-                                            <option selected disabled>Please select a class</option>
-                                            @foreach ($school_classes as $school_class)
-                                                <option value="{{$school_class->id}}" >{{$school_class->class_name}}</option>
-                                            @endforeach
+                                        <option selected disabled>Please select a class</option>
+                                        @foreach ($school_classes as $school_class)
+                                        <option value="{{$school_class->id}}">{{$school_class->class_name}}</option>
+                                        @endforeach
                                         @endisset
                                     </select>
                                 </div>
@@ -177,21 +177,24 @@
     function getSections(obj) {
         var class_id = obj.options[obj.selectedIndex].value;
 
-        var url = "{{route('get.sections.courses.by.classId')}}?class_id=" + class_id 
+        var url = "{{route('get.sections.courses.by.classId')}}?class_id=" + class_id
 
         fetch(url)
-        .then((resp) => resp.json())
-        .then(function(data) {
-            var sectionSelect = document.getElementById('inputAssignToSection');
-            sectionSelect.options.length = 0;
-            data.sections.unshift({'id': 0,'section_name': 'Please select a section'})
-            data.sections.forEach(function(section, key) {
-                sectionSelect[key] = new Option(section.section_name, section.id);
+            .then((resp) => resp.json())
+            .then(function(data) {
+                var sectionSelect = document.getElementById('inputAssignToSection');
+                sectionSelect.options.length = 0;
+                data.sections.unshift({
+                    'id': 0,
+                    'section_name': 'Please select a section'
+                })
+                data.sections.forEach(function(section, key) {
+                    sectionSelect[key] = new Option(section.section_name, section.id);
+                });
+            })
+            .catch(function(error) {
+                console.log(error);
             });
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
     }
 </script>
 @include('components.photos.photo-input')

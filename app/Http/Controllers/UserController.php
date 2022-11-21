@@ -22,10 +22,12 @@ class UserController extends Controller
     protected $schoolClassRepository;
     protected $schoolSectionRepository;
 
-    public function __construct(UserInterface $userRepository, SchoolSessionInterface $schoolSessionRepository,
-    SchoolClassInterface $schoolClassRepository,
-    SectionInterface $schoolSectionRepository)
-    {
+    public function __construct(
+        UserInterface $userRepository,
+        SchoolSessionInterface $schoolSessionRepository,
+        SchoolClassInterface $schoolClassRepository,
+        SectionInterface $schoolSectionRepository
+    ) {
         $this->middleware(['can:view users']);
 
         $this->userRepository = $userRepository;
@@ -33,7 +35,7 @@ class UserController extends Controller
         $this->schoolClassRepository = $schoolClassRepository;
         $this->schoolSectionRepository = $schoolSectionRepository;
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -51,13 +53,14 @@ class UserController extends Controller
         }
     }
 
-    public function getStudentList(Request $request) {
+    public function getStudentList(Request $request)
+    {
         $current_school_session_id = $this->getSchoolCurrentSession();
 
         $class_id = $request->query('class_id', 0);
         $section_id = $request->query('section_id', 0);
 
-        try{
+        try {
 
             $school_classes = $this->schoolClassRepository->getAllBySession($current_school_session_id);
 
@@ -75,7 +78,8 @@ class UserController extends Controller
     }
 
 
-    public function showStudentProfile($id) {
+    public function showStudentProfile($id)
+    {
         $student = $this->userRepository->findStudent($id);
 
         $current_school_session_id = $this->getSchoolCurrentSession();
@@ -90,7 +94,8 @@ class UserController extends Controller
         return view('students.profile', $data);
     }
 
-    public function showTeacherProfile($id) {
+    public function showTeacherProfile($id)
+    {
         $teacher = $this->userRepository->findTeacher($id);
         $data = [
             'teacher'   => $teacher,
@@ -99,7 +104,8 @@ class UserController extends Controller
     }
 
 
-    public function createStudent() {
+    public function createStudent()
+    {
         $current_school_session_id = $this->getSchoolCurrentSession();
 
         $school_classes = $this->schoolClassRepository->getAllBySession($current_school_session_id);
@@ -129,7 +135,8 @@ class UserController extends Controller
         }
     }
 
-    public function editStudent($student_id) {
+    public function editStudent($student_id)
+    {
         $student = $this->userRepository->findStudent($student_id);
         $studentParentInfoRepository = new StudentParentInfoRepository();
         $parent_info = $studentParentInfoRepository->getParentInfo($student_id);
@@ -140,12 +147,13 @@ class UserController extends Controller
         $data = [
             'student'       => $student,
             'parent_info'   => $parent_info,
-            'promotion_info'=> $promotion_info,
+            'promotion_info' => $promotion_info,
         ];
         return view('students.edit', $data);
     }
 
-    public function updateStudent(Request $request) {
+    public function updateStudent(Request $request)
+    {
         try {
             $this->userRepository->updateStudent($request->toArray());
 
@@ -155,7 +163,8 @@ class UserController extends Controller
         }
     }
 
-    public function editTeacher($teacher_id) {
+    public function editTeacher($teacher_id)
+    {
         $teacher = $this->userRepository->findTeacher($teacher_id);
 
         $data = [
@@ -164,7 +173,8 @@ class UserController extends Controller
 
         return view('teachers.edit', $data);
     }
-    public function updateTeacher(Request $request) {
+    public function updateTeacher(Request $request)
+    {
         try {
             $this->userRepository->updateTeacher($request->toArray());
 
@@ -174,7 +184,8 @@ class UserController extends Controller
         }
     }
 
-    public function getTeacherList(){
+    public function getTeacherList()
+    {
         $teachers = $this->userRepository->getAllTeachers();
 
         $data = [
@@ -182,5 +193,17 @@ class UserController extends Controller
         ];
 
         return view('teachers.list', $data);
+    }
+
+    // Applicant routes
+    public function registerApplicant()
+    {
+        dd('am here');
+    }
+
+    public function getAllStudentsByClass(Request $request)
+    {
+        $students = $this->userRepository->getAllStudentsByClass($request->query('class_id', 0));
+        return response()->json(['students' => $students]);
     }
 }

@@ -1,0 +1,49 @@
+:root {
+    --sh-green: #52a350;
+    --sh-blue: #08386d;
+    --sh-grey: #e6e8e6;
+    --sh-light-green: #b6d86f;
+    --sh-dark: #343434;
+    --sh-footer-color: #f5fafe;
+    --sh-text-light: #a8a8a8;
+    --sh-circle-bg: #e2effd;
+}
+
+body {
+    scroll-behavior: smooth !important;
+    font-family: Nunito, sans-serif;
+    font-weight: 400;
+}
+
+body {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+.btn-primary-custom {
+    color: #fff;
+    background-color: var(--sh-green);
+    border-color: var(--sh-green);
+}
+
+.custom-bg {
+    background-image: url("../imgs/3.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-top: 125px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+

@@ -24,6 +24,8 @@ use App\Http\Controllers\SchoolSessionController;
 use App\Http\Controllers\AcademicSettingController;
 use App\Http\Controllers\AssignedTeacherController;
 use App\Http\Controllers\Auth\UpdatePasswordController;
+use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\FeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +42,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Applicants routes
+Route::prefix('applicant')->group(function () {
+    Route::get('/register', [ApplicantController::class, 'registerApplicantGet']);
+    Route::post('/register', [ApplicantController::class, 'registerApplicantPost'])->name('applicant.register');
+    Route::get('/check-matric-number', [ApplicantController::class, 'checkMatricNumber']);
+    Route::get('/registration-form/{jambNumber}', [ApplicantController::class, 'registrationFormGet']);
+    Route::get('/application-summary/{id}', [ApplicantController::class, 'applicationSummaryGet'])->name('applicant.application-summary');
+    Route::post('/pay', [ApplicantController::class, 'redirectToGateway'])->name('applicant.pay');
+    Route::get('/payment/callback', [ApplicantController::class, 'handleGatewayCallback']);
+    Route::get('/payment-summary/{id}', [ApplicantController::class, 'paymentSummaryGet'])->name('applicant.payment-summary');
+});
+
 Auth::routes();
+
 
 Route::middleware(['auth'])->group(function () {
 
@@ -104,6 +119,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/students/view/list', [UserController::class, 'getStudentList'])->name('student.list.show');
     Route::get('/students/view/profile/{id}', [UserController::class, 'showStudentProfile'])->name('student.profile.show');
     Route::get('/students/view/attendance/{id}', [AttendanceController::class, 'showStudentAttendance'])->name('student.attendance.show');
+    Route::get('/students/class', [UserController::class, 'getAllStudentsByClass'])->name('get.student.in.class.by.classid');
 
     // Marks
     Route::get('/marks/create', [MarkController::class, 'create'])->name('course.mark.create');
@@ -176,4 +192,17 @@ Route::middleware(['auth'])->group(function () {
     // Update password
     Route::get('password/edit', [UpdatePasswordController::class, 'edit'])->name('password.edit');
     Route::post('password/edit', [UpdatePasswordController::class, 'update'])->name('password.update');
+
+    // Fee
+    Route::get('/fees/view', [FeeController::class, 'index'])->name('fee.list.show');
+    Route::get('/fees/create', [FeeController::class, 'create'])->name('fee.create.show');
+    Route::post('/fees/create', [FeeController::class, 'store'])->name('fee.create');
+    Route::get('/fees/assign', [FeeController::class, 'assign'])->name('fee.assign.show');
+    Route::post('/fees/assign', [FeeController::class, 'assignfee'])->name('fee.assign.create');
+    Route::post('/fees/assign/student', [FeeController::class, 'assignstudent'])->name('fee.assign.student');
+    Route::get('/fees/class/show', [FeeController::class, 'feeclasses'])->name('fee.class.show');
+    Route::get('/fees/edit/show', [FeeController::class, 'edit'])->name('fee.edit.show');
+    Route::post('/fees/update', [FeeController::class, 'update'])->name('fee.update');
+    Route::get('/fees/class/remove', [FeeController::class, 'removeclassfromfee'])->name('fee.class.remove');
+    Route::get('/fees/student/remove', [FeeController::class, 'removestudentfromfee'])->name('fee.student.remove');
 });
